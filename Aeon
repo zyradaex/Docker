@@ -1,0 +1,74 @@
+#!/bin/sh
+
+# Update and upgrade packages
+apt-get update && apt-get upgrade -y
+
+# Install necessary repositories and Python 3.12
+apt-get install -y software-properties-common
+add-apt-repository ppa:deadsnakes/ppa
+apt-get update
+apt-get install -y python3.12 python3.12-dev python3.12-venv python3-pip libpython3.12 libpython3.12-dev
+
+# Install additional dependencies
+apt-get install -y --no-install-recommends \
+    apt-utils aria2 curl zstd git libmagic-dev \
+    locales mediainfo neofetch p7zip-full \
+    p7zip-rar tzdata wget qbittorrent-nox \
+    autoconf automake build-essential cmake \
+    g++ gcc gettext gpg-agent intltool libtool \
+    make unzip zip autoconf automake libtool \
+    libcurl4-openssl-dev libsodium-dev libssl-dev \
+    libcrypto++-dev libc-ares-dev libsqlite3-dev \
+    libfreeimage-dev swig libboost-all-dev \
+    libpthread-stubs0-dev zlib1g-dev
+
+# Create temporary directory and install FFmpeg
+mkdir /Temp
+cd /Temp
+wget https://github.com/arakurumi/FFmpeg-Builds/releases/download/latest/ffmpeg-n7.1-latest-linux64-nonfree-7.1.tar.xz
+7z x ffmpeg-n7.1-latest-linux64-nonfree-7.1.tar.xz
+7z x ffmpeg-n7.1-latest-linux64-nonfree-7.1.tar
+cd /Temp/ffmpeg-n7.1-latest-linux64-nonfree-7.1/bin
+mv ffmpeg /usr/bin/xtra
+mv ffprobe /usr/bin/ffprobe
+mv ffplay /usr/bin/ffplay
+chmod +x /usr/bin/xtra /usr/bin/ffprobe /usr/bin/ffplay
+
+# Install rclone and rename binaries
+cd /Temp
+curl https://rclone.org/install.sh | bash
+
+# rename binaries
+mv /usr/bin/rclone /usr/bin/xone
+mv /usr/bin/aria2c /usr/bin/xria
+mv /usr/bin/qbittorrent-nox /usr/bin/xnox
+
+# Clone and build MEGA SDK
+git clone https://github.com/meganz/sdk.git --depth=1 -b v4.8.0 /home/sdk
+cd /home/sdk
+rm -rf .git
+autoupdate -fIv && ./autogen.sh
+./configure --disable-silent-rules --enable-python --with-sodium --disable-examples
+make -j$(nproc --all)
+
+# Build and install the MEGA SDK Python bindings
+cd bindings/python/
+python3.12 setup.py bdist_wheel
+pip3 install --break-system-packages --no-cache-dir dist/megasdk-4.8.0-*.whl
+
+# Clean up unnecessary packages
+apt-get remove -y \
+    autoconf automake build-essential \
+    cmake g++ gcc gettext gpg-agent \
+    intltool libtool make unzip zip \
+    libtool libcurl4-openssl-dev libssl-dev \
+    libc-ares-dev libsqlite3-dev swig \
+    libboost-all-dev libpthread-stubs0-dev zlib1g-dev
+
+apt-get autoremove -y
+apt-get autoclean -y
+
+# Clean up temporary directories and files
+rm -rf /Temp
+rm -rf Aeon
+rm -rf Dockerfile
