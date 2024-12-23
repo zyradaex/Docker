@@ -29,19 +29,19 @@ wget https://github.com/arakurumi/FFmpeg-Builds/releases/download/latest/ffmpeg-
 7z x ffmpeg-n7.1-latest-linux64-nonfree-7.1.tar.xz
 7z x ffmpeg-n7.1-latest-linux64-nonfree-7.1.tar
 cd /Temp/ffmpeg-n7.1-latest-linux64-nonfree-7.1/bin
-mv ffmpeg /usr/bin/xtra
+mv ffmpeg /usr/bin/medtool
 mv ffprobe /usr/bin/ffprobe
 mv ffplay /usr/bin/ffplay
-chmod +x /usr/bin/xtra /usr/bin/ffprobe /usr/bin/ffplay
+chmod +x /usr/bin/medtool /usr/bin/ffprobe /usr/bin/ffplay
 
 # Install rclone and rename binaries
 cd /Temp
 curl https://rclone.org/install.sh | bash
 
 # rename binaries
-mv /usr/bin/rclone /usr/bin/xone
-mv /usr/bin/aria2c /usr/bin/xria
-mv /usr/bin/qbittorrent-nox /usr/bin/xnox
+mv /usr/bin/rclone /usr/bin/xyfetch
+mv /usr/bin/aria2c /usr/bin/xyria
+mv /usr/bin/qbittorrent-nox /usr/bin/xygrep
 
 # Clone and build MEGA SDK
 git clone https://github.com/meganz/sdk.git --depth=1 -b v4.8.0 /home/sdk
