@@ -38,7 +38,7 @@ chmod +x /usr/bin/medtool /usr/bin/ffprobe /usr/bin/ffplay
 cd /Temp
 curl https://rclone.org/install.sh | bash
 
-# rename binaries
+# Rename binaries
 mv /usr/bin/rclone /usr/bin/xyfetch
 mv /usr/bin/aria2c /usr/bin/xyria
 mv /usr/bin/qbittorrent-nox /usr/bin/xygrep
@@ -55,6 +55,14 @@ make -j$(nproc --all)
 cd bindings/python/
 python3.12 setup.py bdist_wheel
 pip3 install --break-system-packages --no-cache-dir dist/megasdk-4.8.0-*.whl
+
+# Create virtual environment and install tgcrypto and pyrofork
+mkdir -p /usr/src/app
+cd /usr/src/app
+python3.12 -m venv mltbenv
+. mltbenv/bin/activate
+pip install --no-cache-dir tgcrypto pyrofork
+deactivate
 
 # Clean up unnecessary packages
 apt-get remove -y \
