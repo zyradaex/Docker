@@ -18,11 +18,11 @@ This repository provides a GitHub Actions workflow to build and push Docker imag
 
 ## Inputs
 
-| Input        | Description                        | Required |
-|--------------|------------------------------------|----------|
-| `username`   | Your Docker Hub username           | ✅       |
-| `password`   | Your Docker Hub password           | ✅       |
-| `image_name` | Name of the Docker image to build  | ✅       |
+| Input        | Description                        |
+|--------------|------------------------------------|
+| `username`   | Your Docker Hub username           |
+| `password`   | Your Docker Hub password           |
+| `image_name` | Name of the Docker image to build  |
 
 ## Notes
 
@@ -31,4 +31,4 @@ This repository provides a GitHub Actions workflow to build and push Docker imag
 
 ## Support
 
-For issues, open an issue in this repository.
+For issues, join here https://t.me/AeonDiscussion.
