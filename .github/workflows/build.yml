@@ -1,4 +1,4 @@
-name: Docker.io
+name: Push to docker.io
 
 on:
   workflow_dispatch:
@@ -15,13 +15,43 @@ on:
         required: true
 
 jobs:
-  build:
+  build-amd64:
     runs-on: ubuntu-24.04
-
-    steps:
+    steps:      
       - name: Checkout 
         uses: actions/checkout@v4
 
+      - name: Login to Docker.io
+        uses: docker/login-action@v3
+        with:
+          username: ${{ inputs.username }}
+          password: ${{ inputs.password }}
+
+      - name: Docker Metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          tags: latest
+          images: ${{ inputs.username }}/${{ inputs.image_name }}
+
+      - name: Build and Push for AMD64
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          no-cache: true
+          provenance: false
+          platforms: linux/amd64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
+
+
+  build-arm64:
+    runs-on: ubuntu-24.04
+    steps:      
+      - name: Checkout 
+        uses: actions/checkout@v4
+      
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -38,18 +68,16 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          tags: |
-            latest
-          images: |
-            ${{ inputs.username }}/${{ inputs.image_name }}
+          tags: latest
+          images: ${{ inputs.username }}/${{ inputs.image_name }}
 
-      - name: Build and Push to Docker.io
+      - name: Build and Push for ARM64
         uses: docker/build-push-action@v5
         with:
           push: true
           no-cache: true
           provenance: false
-          platforms: linux/arm64,linux/amd64
+          platforms: linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
