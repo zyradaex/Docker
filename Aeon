@@ -82,9 +82,10 @@ install_rclone() {
     mv /usr/bin/aria2c /usr/bin/xria
 }
 
-# Install Python packages
+# Install Python packages including TgCrypto and Kurigram
 install_python_packages() {
     pip3 install --break-system-packages --no-cache-dir -U setuptools uv
+    pip3 install --break-system-packages --no-cache-dir tgcrypto kurigram
 }
 
 # Clone and build MEGA SDK
@@ -111,7 +112,7 @@ cleanup() {
     apt-get autoremove -y
     apt-get autoclean -y
 
-    rm -rf /Temp Aeon Dockerfile
+    rm -rf /Temp /home/sdk Dockerfile
 }
 
 # Main script execution
