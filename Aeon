@@ -27,17 +27,17 @@ install_dependencies() {
         libpthread-stubs0-dev zlib1g-dev
 }
 
-# Download and install qbittorrent-nox based on system architecture
+# Download and install qbittorrent-nox version 4.6.7_v2.0.10 based on system architecture
 install_qbittorrent() {
     ARCH=$(uname -m)
     mkdir -p /usr/local/bin
 
     case "$ARCH" in
         x86_64)
-            wget -qO /usr/local/bin/xnox https://github.com/userdocs/qbittorrent-nox-static/releases/latest/download/x86_64-qbittorrent-nox
+            wget -qO /usr/local/bin/xnox https://github.com/userdocs/qbittorrent-nox-static/releases/download/release-4.6.7_v2.0.10/x86_64-qbittorrent-nox
             ;;
         aarch64)
-            wget -qO /usr/local/bin/xnox https://github.com/userdocs/qbittorrent-nox-static/releases/latest/download/aarch64-qbittorrent-nox
+            wget -qO /usr/local/bin/xnox https://github.com/userdocs/qbittorrent-nox-static/releases/download/release-4.6.7_v2.0.10/aarch64-qbittorrent-nox
             ;;
         *)
             echo "Unsupported architecture for qbittorrent-nox: $ARCH"
@@ -82,10 +82,16 @@ install_rclone() {
     mv /usr/bin/aria2c /usr/bin/xria
 }
 
-# Install Python packages including TgCrypto and Kurigram
+# Install Python packages
 install_python_packages() {
-    pip3 install --break-system-packages --no-cache-dir -U setuptools uv
-    pip3 install --break-system-packages --no-cache-dir tgcrypto kurigram
+    pip3 install --break-system-packages --ignore-installed --no-cache-dir \
+        aiofiles aioshutil anytree apscheduler aria2p asyncio \
+        cloudscraper dnspython feedparser flask gevent \
+        google-api-python-client google-auth-httplib2 google-auth-oauthlib \
+        gunicorn httpx lxml motor natsort pillow psutil \
+        pymongo python-dotenv python-magic qbittorrent-api requests \
+        telegraph tenacity urllib3 uvloop xattr yt-dlp[default] \
+        tgcrypto pyrofork
 }
 
 # Clone and build MEGA SDK
